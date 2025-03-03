@@ -1,11 +1,22 @@
 package com.sudagoarth.events.DataTransferObjects.Ticket;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class TicketRequest {
 
+    @NotBlank(message = "Event ID is required")
     private Long eventId;
+
+    @NotBlank(message = "User ID is required")
     private Long userId;
+
+    @NotBlank(message = "Ticket quantity is required")
     private int ticketQuantity;
+
+    @NotBlank(message = "Ticket price is required")
     private double ticketPrice;
+
+    @NotBlank(message = "Ticket status is required")
     private String ticketStatus;
 
     public Long getEventId() {

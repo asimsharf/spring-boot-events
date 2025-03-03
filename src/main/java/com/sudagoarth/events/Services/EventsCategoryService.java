@@ -4,13 +4,15 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.sudagoarth.events.DataTransferObjects.EventsCategory.EventsCategoryRequest;
 import com.sudagoarth.events.Interfaces.EventsCategoryInterface;
 import com.sudagoarth.events.Models.EventsCategory;
 import com.sudagoarth.events.Repositories.EventsCategoryRepository;
-import com.sudagoarth.events.exceptions.EventsCategoryNotFoundException;
+import com.sudagoarth.events.exceptions.DuplicateException;
+import com.sudagoarth.events.exceptions.NotFoundException;
 
 @Service
 public class EventsCategoryService implements EventsCategoryInterface {
@@ -20,65 +22,60 @@ public class EventsCategoryService implements EventsCategoryInterface {
 
     private static final Logger LOGGER = Logger.getLogger(EventsCategoryService.class.getName());
 
-
     @Override
-    public EventsCategory createEventCategory(EventsCategoryRequest eventsCategoryRequest) {    
-        LOGGER.info("Creating event category");
-        EventsCategory eventsCategory = new EventsCategory();
-        eventsCategory.setName(eventsCategoryRequest.getName());
-        return eventsCategoryRepository.save(eventsCategory);
+    public EventsCategory createEventCategory(EventsCategoryRequest eventsCategoryRequest) throws DuplicateException {
+        try {
+            EventsCategory eventsCategory = new EventsCategory();
+            eventsCategory.setName(eventsCategoryRequest.getName());
+            return eventsCategoryRepository.save(eventsCategory);
+        } catch (Exception ex) {
+            throw new DuplicateException("Category already exists");
+        }
     }
 
     @Override
-    public EventsCategory updateEventCategory(EventsCategoryRequest eventsCategoryRequest) throws EventsCategoryNotFoundException {
-
-    
-        // Check if the category exists by id
-        if (eventsCategoryRequest.getCategoryId() == null) {
-            throw new IllegalArgumentException("Event category ID is required for update");
+    public EventsCategory updateEventCategory(EventsCategoryRequest eventsCategoryRequest) {
+        // Ensure the category ID is provided
+        if (eventsCategoryRequest.getId() == null) {
+            throw new IllegalArgumentException("Event category ID is required for update.");
         }
-    
+
         // Fetch the existing category from the repository
-        EventsCategory existingCategory = eventsCategoryRepository.findById(eventsCategoryRequest.getCategoryId())
-                .orElseThrow(() -> new EventsCategoryNotFoundException("Event category not found with id: " + eventsCategoryRequest.getCategoryId()));
-    
-        // Log if category found
-    
-        // Update the existing category fields
+        EventsCategory existingCategory = eventsCategoryRepository.findById(eventsCategoryRequest.getId())
+                .orElseThrow(() -> new NotFoundException(
+                        "Event category not found with ID: " + eventsCategoryRequest.getId()));
+
+        // Update the category name
         existingCategory.setName(eventsCategoryRequest.getName());
-        
-        // Save the updated category back to the database
-        EventsCategory updatedCategory = eventsCategoryRepository.save(existingCategory);
- 
-        
-        return updatedCategory;
-    }
-    
 
-
-    @Override
-    public EventsCategory deleteEventCategory(Long eventCategoryId)  {
-        LOGGER.info("Deleting event category");
-        EventsCategory eventsCategory = eventsCategoryRepository.findById(eventCategoryId).orElse(null);
-        if (eventsCategory != null) {
-            eventsCategoryRepository.delete(eventsCategory);
+        try {
+            // Save the updated category
+            return eventsCategoryRepository.save(existingCategory);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateException("Category with this name already exists.");
         }
-        return eventsCategory;
     }
-
 
     @Override
-    public EventsCategory getEventCategory(Long eventCategoryId) {
-        LOGGER.info("Getting event category");
-        return eventsCategoryRepository.findById(eventCategoryId).orElse(null);
+    public void deleteEventCategory(Long eventCategoryId) throws NotFoundException {
+        // Fetch the existing category from the repository
+        EventsCategory existingCategory = eventsCategoryRepository.findById(eventCategoryId)
+                .orElseThrow(() -> new NotFoundException("Event category not found with ID: " + eventCategoryId));
+
+        // Delete the category
+        eventsCategoryRepository.delete(existingCategory);
     }
 
+    @Override
+    public EventsCategory getEventCategory(Long eventCategoryId) throws NotFoundException {
+        return eventsCategoryRepository.findById(eventCategoryId)
+                .orElseThrow(() -> new NotFoundException("Event category not found with ID: " + eventCategoryId));
+    }
 
     @Override
     public List<EventsCategory> getAllEventCategories() {
         LOGGER.info("Getting all event categories");
         return eventsCategoryRepository.findAll();
     }
-
 
 }

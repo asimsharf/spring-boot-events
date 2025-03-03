@@ -7,9 +7,12 @@ import com.sudagoarth.events.Models.EventsCategory;
 
 public interface EventsCategoryInterface {
     EventsCategory createEventCategory(EventsCategoryRequest eventsCategoryRequest);
+
     EventsCategory updateEventCategory(EventsCategoryRequest eventsCategoryRequest);
-    EventsCategory deleteEventCategory(Long eventCategoryId);
+
+    void deleteEventCategory(Long eventCategoryId);
+
     EventsCategory getEventCategory(Long eventCategoryId);
+
     List<EventsCategory> getAllEventCategories();
 }
-
