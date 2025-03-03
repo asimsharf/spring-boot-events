@@ -23,8 +23,8 @@ public class Event {
     @JoinColumn(name = "event_location_id", nullable = false)
     private Location eventLocation;
 
-    private Date eventDate;
-    private String eventTime;
+    private Date eventStartDateTime;
+    private Date eventEndDateTime;
     private String eventImageUrl;
     private double eventDistance;
 
@@ -65,20 +65,20 @@ public class Event {
         this.eventLocation = eventLocation;
     }
 
-    public Date getEventDate() {
-        return eventDate;
+    public Date getEventStartDateTime() {
+        return eventStartDateTime;
     }
 
-    public void setEventDate(Date eventDate) {
-        this.eventDate = eventDate;
+    public void setEventStartDateTime(Date eventStartDateTime) {
+        this.eventStartDateTime = eventStartDateTime;
     }
 
-    public String getEventTime() {
-        return eventTime;
+    public Date getEventEndDateTime() {
+        return eventEndDateTime;
     }
 
-    public void setEventTime(String eventTime) {
-        this.eventTime = eventTime;
+    public void setEventEndDateTime(Date eventEndDateTime) {
+        this.eventEndDateTime = eventEndDateTime;
     }
 
     public String getEventImageUrl() {
