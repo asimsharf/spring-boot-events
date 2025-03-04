@@ -2,6 +2,8 @@ package com.sudagoarth.events.Models;
 
 import java.util.List;
 
+import com.sudagoarth.events.DataTransferObjects.EventsCategory.EventsCategoryRequest;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,24 @@ public class EventsCategory {
 
     @OneToMany(mappedBy = "category")
     private List<Event> events;  // A category has many events
+
+    // Constructors
+    public EventsCategory() {
+    }
+
+    public EventsCategory(String name) {
+        this.name = name;
+    }
+
+    public EventsCategory(EventsCategoryRequest eventsCategoryRequest) {
+        this.name = eventsCategoryRequest.getName();
+    }
+
+    public EventsCategory(EventsCategory eventsCategory) {
+        this.id = eventsCategory.getCategoryId();
+        this.name = eventsCategory.getName();
+    }
+
 
     // Getters and Setters
     public Long getCategoryId() {

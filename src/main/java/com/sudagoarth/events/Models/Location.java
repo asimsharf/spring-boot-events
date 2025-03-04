@@ -9,6 +9,8 @@ import jakarta.persistence.Table;
 
 import java.io.Serializable;
 
+import com.sudagoarth.events.DataTransferObjects.Location.LocationRequest;
+
 @Entity
 @Table(name = "location")
 public class Location implements Serializable {
@@ -24,6 +26,30 @@ public class Location implements Serializable {
     private String state;
     private String country;
     private String postalCode;
+
+    // Constructors
+    public Location() {
+    }
+
+    public Location(double latitude, double longitude, String address, String city, String state, String country, String postalCode) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.postalCode = postalCode;
+    }
+
+    public Location(LocationRequest locationRequest) {
+        this.latitude = locationRequest.getLatitude();
+        this.longitude = locationRequest.getLongitude();
+        this.address = locationRequest.getAddress();
+        this.city = locationRequest.getCity();
+        this.state = locationRequest.getState();
+        this.country = locationRequest.getCountry();
+        this.postalCode = locationRequest.getPostalCode();
+    }
 
     // Getters and Setters
     public Long getLocationId() {

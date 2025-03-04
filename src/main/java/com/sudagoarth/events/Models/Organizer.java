@@ -1,6 +1,8 @@
 package com.sudagoarth.events.Models;
 
 
+import com.sudagoarth.events.DataTransferObjects.Organizer.OrganizerRequest;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,72 +17,107 @@ public class Organizer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long organizerId;
+    private Long id;
 
-    private String organizerName;
-    private String organizerEmail;
-    private String organizerPhone;
-    private String organizerWebsite;
-    private String organizerLogoUrl;
+    private String name;
+    private String email;
+    private String phone;
+    private String website;
+    private String logoUrl;
 
     @ManyToOne
     @JoinColumn(name = "organizer_location_id", nullable = false)
-    private Location organizerLocation;
+    private Location location;
+
+
+
+    // Constructors
+
+    public Organizer() {
+    }
+    
+    public Organizer(OrganizerRequest organizerRequest, Location location) {
+        this.name = organizerRequest.getName();
+        this.email = organizerRequest.getEmail();
+        this.phone = organizerRequest.getPhone();
+        this.website = organizerRequest.getWebsite();
+        this.logoUrl = organizerRequest.getLogoUrl();
+        this.location = location;
+    }
+
+    public Organizer(String name, String email, String phone, String website, String logoUrl, Location location) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.website = website;
+        this.logoUrl = logoUrl;
+        this.location = location;
+    }
+
+
 
     // Getters and Setters
-    public Long getOrganizerId() {
-        return organizerId;
+    public Long getId() {
+        return id;
     }
 
-    public void setOrganizerId(Long organizerId) {
-        this.organizerId = organizerId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getOrganizerName() {
-        return organizerName;
+    public String getName() {
+        return name;
     }
 
-    public void setOrganizerName(String organizerName) {
-        this.organizerName = organizerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getOrganizerEmail() {
-        return organizerEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setOrganizerEmail(String organizerEmail) {
-        this.organizerEmail = organizerEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getOrganizerPhone() {
-        return organizerPhone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setOrganizerPhone(String organizerPhone) {
-        this.organizerPhone = organizerPhone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getOrganizerWebsite() {
-        return organizerWebsite;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setOrganizerWebsite(String organizerWebsite) {
-        this.organizerWebsite = organizerWebsite;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public String getOrganizerLogoUrl() {
-        return organizerLogoUrl;
+    public String getLogoUrl() {
+        return logoUrl;
     }
 
-    public void setOrganizerLogoUrl(String organizerLogoUrl) {
-        this.organizerLogoUrl = organizerLogoUrl;
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 
-    public Location getOrganizerLocation() {
-        return organizerLocation;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setOrganizerLocation(Location organizerLocation) {
-        this.organizerLocation = organizerLocation;
+    public void setLocation(Location location) {
+        this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "Organizer [email=" + email + ", id=" + id + ", location=" + location.toString() + ", logoUrl=" + logoUrl + ", name="
+                + name + ", phone=" + phone + ", website=" + website + "]";
+    }
+
+    
 }

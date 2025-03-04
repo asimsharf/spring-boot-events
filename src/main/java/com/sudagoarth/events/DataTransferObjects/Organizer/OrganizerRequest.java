@@ -71,5 +71,11 @@ public class OrganizerRequest {
     public void setLocation(LocationRequest location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "OrganizerRequest [email=" + email + ", location=" + location + ", logoUrl=" + logoUrl + ", name=" + name
+                + ", phone=" + phone + ", website=" + website + "]";
+    }
     
 }

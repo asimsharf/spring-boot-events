@@ -1,22 +1,32 @@
 package com.sudagoarth.events.DataTransferObjects.Location;
 
-
-// "address": "",
-// "city": "",
-// "country": "",
-// "latitude": "",
-// "longitude": "",
-// "postal_code": "",
-// "state": ""
-
 public class LocationRequest {
     private String address;
     private String city;
     private String country;
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
     private String postalCode;
     private String state;
+
+    public LocationRequest() {
+    }
+
+    public LocationRequest(String address, String city, String country, double latitude, double longitude,
+            String postalCode, String state) {
+        this.address = address;
+        this.city = city;
+        this.country = country;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.postalCode = postalCode;
+        this.state = state;
+    }
+
+    public static LocationRequest fromEntity(com.sudagoarth.events.Models.Location location) {
+        return new LocationRequest(location.getAddress(), location.getCity(), location.getCountry(),
+                location.getLatitude(), location.getLongitude(), location.getPostalCode(), location.getState());
+    }
 
     public String getAddress() {
         return address;
@@ -42,19 +52,19 @@ public class LocationRequest {
         this.country = country;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -72,5 +82,12 @@ public class LocationRequest {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return "LocationRequest [address=" + address + ", city=" + city + ", country=" + country + ", latitude="
+                + latitude
+                + ", longitude=" + longitude + ", postalCode=" + postalCode + ", state=" + state + "]";
     }
 }

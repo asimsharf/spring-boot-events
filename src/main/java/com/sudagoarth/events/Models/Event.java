@@ -1,7 +1,8 @@
 package com.sudagoarth.events.Models;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "event")
@@ -14,21 +15,21 @@ public class Event {
     @Column(name = "event_name", nullable = false, unique = true, length = 100)
     private String eventName;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", nullable = false)
     private EventsCategory category;  // Each event belongs to one category
 
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "event_location_id", nullable = false)
     private Location eventLocation;
 
-    private Date eventStartDateTime;
-    private Date eventEndDateTime;
+    private LocalDateTime eventStartDateTime;
+    private LocalDateTime eventEndDateTime;
     private String eventImageUrl;
     private double eventDistance;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "organizer_id", nullable = false)
     private Organizer organizer;
 
@@ -65,19 +66,19 @@ public class Event {
         this.eventLocation = eventLocation;
     }
 
-    public Date getEventStartDateTime() {
+    public LocalDateTime getEventStartDateTime() {
         return eventStartDateTime;
     }
 
-    public void setEventStartDateTime(Date eventStartDateTime) {
+    public void setEventStartDateTime(LocalDateTime eventStartDateTime) {
         this.eventStartDateTime = eventStartDateTime;
     }
 
-    public Date getEventEndDateTime() {
+    public LocalDateTime getEventEndDateTime() {
         return eventEndDateTime;
     }
 
-    public void setEventEndDateTime(Date eventEndDateTime) {
+    public void setEventEndDateTime(LocalDateTime eventEndDateTime) {
         this.eventEndDateTime = eventEndDateTime;
     }
 
@@ -103,5 +104,20 @@ public class Event {
 
     public void setOrganizer(Organizer organizer) {
         this.organizer = organizer;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", eventName='" + eventName + '\'' +
+                ", category=" + category.toString() +
+                ", eventLocation=" + eventLocation.toString() +
+                ", eventStartDateTime=" + eventStartDateTime +
+                ", eventEndDateTime=" + eventEndDateTime +
+                ", eventImageUrl='" + eventImageUrl + '\'' +
+                ", eventDistance=" + eventDistance +
+                ", organizer=" + organizer.toString() +
+                '}';
     }
 }
