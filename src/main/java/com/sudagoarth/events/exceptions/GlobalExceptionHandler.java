@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.sudagoarth.events.Models.LocaledData;
+import com.sudagoarth.events.Entities.LocaledData;
 
 import java.util.List;
 import java.util.Map;

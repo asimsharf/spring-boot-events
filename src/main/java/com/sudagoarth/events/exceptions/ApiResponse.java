@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sudagoarth.events.Models.LocaledData;
+import com.sudagoarth.events.Entities.LocaledData;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ApiResponse(LocaledData message, int status, Object data, String code, boolean success,
