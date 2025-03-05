@@ -3,12 +3,12 @@ package com.sudagoarth.events.Interfaces;
 import java.util.List;
 
 import com.sudagoarth.events.DataTransferObjects.Event.EventRequest;
-import com.sudagoarth.events.Models.Event;
+import com.sudagoarth.events.DataTransferObjects.Event.EventResponse;
 
 public interface EventsInterface {
-    Event createEvent(EventRequest eventRequest);
-    Event updateEvent(EventRequest eventRequest);
+    EventResponse createEvent(EventRequest eventRequest);
+    EventResponse updateEvent(EventRequest eventRequest);
     void deleteEvent(Long eventId);
-    Event getEvent(Long eventId);
-    List<Event> getAllEvents();
+    EventResponse getEvent(Long eventId);
+    List<EventResponse> getAllEvents();
 }

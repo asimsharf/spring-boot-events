@@ -1,7 +1,10 @@
 package com.sudagoarth.events.Services;
 
 import java.util.List;
-import java.util.logging.Logger;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,7 +23,7 @@ public class EventsCategoryService implements EventsCategoryInterface {
     @Autowired
     private EventsCategoryRepository eventsCategoryRepository;
 
-    private static final Logger LOGGER = Logger.getLogger(EventsCategoryService.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventsService.class);
 
     @Override
     public EventsCategory createEventCategory(EventsCategoryRequest eventsCategoryRequest) throws DuplicateException {

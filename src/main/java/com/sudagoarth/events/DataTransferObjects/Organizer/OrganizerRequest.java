@@ -77,5 +77,5 @@ public class OrganizerRequest {
         return "OrganizerRequest [email=" + email + ", location=" + location + ", logoUrl=" + logoUrl + ", name=" + name
                 + ", phone=" + phone + ", website=" + website + "]";
     }
-    
+
 }

@@ -11,6 +11,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class EventRequest {
+
+    private Long id;
+
     @NotBlank(message = "Event name is required")
     private String name;
 
@@ -35,6 +38,53 @@ public class EventRequest {
 
     @NotBlank(message = "Event organizer is required")
     private OrganizerRequest organizer;
+
+    public EventRequest() {
+    }
+
+    public EventRequest(Long id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime,
+            String eventImageUrl,
+            EventsCategory category, LocationRequest location, OrganizerRequest organizer) {
+        this.id = id;
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.eventImageUrl = eventImageUrl;
+        this.category = category;
+        this.location = location;
+        this.organizer = organizer;
+    }
+
+    public EventRequest(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String eventImageUrl,
+            EventsCategory category, LocationRequest location, OrganizerRequest organizer) {
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.eventImageUrl = eventImageUrl;
+        this.category = category;
+        this.location = location;
+        this.organizer = organizer;
+    }
+
+    public EventRequest(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String eventImageUrl,
+            EventsCategory category, LocationRequest location, OrganizerRequest organizer, Long id) {
+        this.id = id;
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.eventImageUrl = eventImageUrl;
+        this.category = category;
+        this.location = location;
+        this.organizer = organizer;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -94,8 +144,10 @@ public class EventRequest {
 
     @Override
     public String toString() {
-        return "EventRequest [category=" + category.toString() + ", endDateTime=" + endDateTime + ", eventImageUrl=" + eventImageUrl
-                + ", location=" + location.toString() + ", name=" + name + ", organizer=" + organizer.toString() + ", startDateTime="
+        return "EventRequest [category=" + category.toString() + ", endDateTime=" + endDateTime + ", eventImageUrl="
+                + eventImageUrl
+                + ", location=" + location.toString() + ", name=" + name + ", organizer=" + organizer.toString()
+                + ", startDateTime="
                 + startDateTime + "]";
     }
 }

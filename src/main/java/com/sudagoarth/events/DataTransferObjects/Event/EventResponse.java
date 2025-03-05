@@ -1,10 +1,12 @@
 package com.sudagoarth.events.DataTransferObjects.Event;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.sudagoarth.events.DataTransferObjects.EventsCategory.EventsCategoryResponse;
 import com.sudagoarth.events.DataTransferObjects.Location.LocationResponse;
 import com.sudagoarth.events.DataTransferObjects.Organizer.OrganizerResponse;
+import com.sudagoarth.events.Models.Event;
 
 public class EventResponse {
     private Long id;
@@ -32,11 +34,27 @@ public class EventResponse {
         this.organizer = organizer;
     }
 
-    public static EventResponse fromEntity(com.sudagoarth.events.Models.Event event) {
+    public EventResponse(Event savedEvent) {
+        this.id = savedEvent.getEventId();
+        this.eventName = savedEvent.getEventName();
+        this.eventStartDateTime = savedEvent.getEventStartDateTime();
+        this.eventEndDateTime = savedEvent.getEventEndDateTime();
+        this.eventImageUrl = savedEvent.getEventImageUrl();
+        this.eventDistance = savedEvent.getEventDistance();
+        this.category = EventsCategoryResponse.fromEntity(savedEvent.getEventCategory());
+        this.eventLocation = LocationResponse.fromEntity(savedEvent.getEventLocation());
+        this.organizer = OrganizerResponse.fromEntity(savedEvent.getOrganizer());
+    }
+
+    public static EventResponse fromEntity(Event event) {
         return new EventResponse(event.getEventId(), event.getEventName(), event.getEventStartDateTime(),
                 event.getEventEndDateTime(), event.getEventImageUrl(), event.getEventDistance(),
                 LocationResponse.fromEntity(event.getEventLocation()),
                 OrganizerResponse.fromEntity(event.getOrganizer()));
+    }
+
+    public static List<EventResponse> fromEvents(List<Event> events) {
+        return events.stream().map(EventResponse::fromEntity).toList();
     }
 
     public Long getId() {

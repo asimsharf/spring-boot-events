@@ -1,5 +1,6 @@
 package com.sudagoarth.events.DataTransferObjects.EventsCategory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sudagoarth.events.DataTransferObjects.Event.EventResponse;
@@ -19,10 +20,15 @@ public class EventsCategoryResponse {
         this.events = events;
     }
 
-    public static EventsCategoryResponse fromEntity(EventsCategory eventsCategory) {
-        List<EventResponse> eventResponses = eventsCategory.getEvents().stream().map(EventResponse::fromEntity).toList();
-        return new EventsCategoryResponse(eventsCategory.getCategoryId(), eventsCategory.getName(), eventResponses);
-    }
+ public static EventsCategoryResponse fromEntity(EventsCategory eventsCategory) {
+    List<EventResponse> eventResponses = (eventsCategory.getEvents() == null ? 
+        new ArrayList<>() : eventsCategory.getEvents().stream()
+            .map(EventResponse::fromEntity)
+            .toList());
+
+    return new EventsCategoryResponse(eventsCategory.getCategoryId(), eventsCategory.getName(), eventResponses);
+}
+
 
     public Long getId() {
         return id;
