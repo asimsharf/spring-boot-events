@@ -6,5 +6,4 @@ import com.sudagoarth.events.Models.RequiredDocument;
 
 public interface RequiredDocumentRepository extends JpaRepository<RequiredDocument, Long> {
 
-
 }

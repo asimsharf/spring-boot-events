@@ -12,5 +12,3 @@ public interface OrganizerRepository extends JpaRepository<Organizer, Long> {
     @Query("SELECT o FROM Organizer o WHERE o.email = ?1")
     Organizer findByEmail(String email);
 }
-
-

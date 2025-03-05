@@ -1,22 +1,28 @@
-package com.sudagoarth.events.Models;
+package com.sudagoarth.events.DataTransferObjects.RequiredDocument;
 
-import jakarta.persistence.*;
+import com.sudagoarth.events.Models.EntityType;
 
-@Entity
-public class RequiredDocument {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RequiredDocumentResponse {
     private Long id;
-
-    @Column(nullable = false)
     private String documentName;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "entity_type_id")
     private EntityType entityType;
-
     private boolean isRequired;
+
+    public RequiredDocumentResponse() {
+    }
+
+    public RequiredDocumentResponse(Long id, String documentName, EntityType entityType, boolean isRequired) {
+        this.id = id;
+        this.documentName = documentName;
+        this.entityType = entityType;
+        this.isRequired = isRequired;
+    }
+
+    public RequiredDocumentResponse(String documentName, EntityType entityType, boolean isRequired) {
+        this.documentName = documentName;
+        this.entityType = entityType;
+        this.isRequired = isRequired;
+    }
 
     public Long getId() {
         return id;

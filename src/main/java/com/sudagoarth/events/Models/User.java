@@ -45,7 +45,6 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    // Getters and Setters
     public Long getUserId() {
         return userId;
     }

@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 import com.sudagoarth.events.Interfaces.UserInterface;
 import com.sudagoarth.events.Repositories.UserRepository;
 
-
 @Service
 public class UserService implements UserInterface {
 
     @Autowired
-    private  UserRepository userRepository;
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(EventsService.class);
+    private UserRepository userRepository;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventsService.class);
 
 }

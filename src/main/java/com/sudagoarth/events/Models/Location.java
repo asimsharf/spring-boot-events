@@ -1,6 +1,5 @@
 package com.sudagoarth.events.Models;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +13,7 @@ import com.sudagoarth.events.DataTransferObjects.Location.LocationRequest;
 @Entity
 @Table(name = "location")
 public class Location implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long locationId;
@@ -31,7 +30,8 @@ public class Location implements Serializable {
     public Location() {
     }
 
-    public Location(double latitude, double longitude, String address, String city, String state, String country, String postalCode) {
+    public Location(double latitude, double longitude, String address, String city, String state, String country,
+            String postalCode) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;

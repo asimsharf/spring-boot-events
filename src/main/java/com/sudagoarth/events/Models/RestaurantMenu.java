@@ -1,6 +1,5 @@
 package com.sudagoarth.events.Models;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +25,6 @@ public class RestaurantMenu {
     private double menuItemPrice;
     private String menuItemImageUrl;
 
-    // Getters and Setters
     public Long getMenuId() {
         return menuId;
     }

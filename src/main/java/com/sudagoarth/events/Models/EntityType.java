@@ -9,9 +9,20 @@ public class EntityType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;  // Name of the entity type (e.g., 'Event', 'Organizer')
+    private String name;
 
-    // Getters and Setters
+    public EntityType() {
+    }
+
+    public EntityType(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public EntityType(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

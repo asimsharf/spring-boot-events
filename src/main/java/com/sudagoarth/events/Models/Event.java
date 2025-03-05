@@ -17,9 +17,8 @@ public class Event {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", nullable = false)
-    private EventsCategory category;  // Each event belongs to one category
+    private EventsCategory category; // Each event belongs to one category
 
-    
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "event_location_id", nullable = false)
     private Location eventLocation;
@@ -33,7 +32,35 @@ public class Event {
     @JoinColumn(name = "organizer_id", nullable = false)
     private Organizer organizer;
 
-    // Getters and Setters
+    public Event() {
+    }
+
+    public Event(Long id, String eventName, EventsCategory category, Location eventLocation,
+            LocalDateTime eventStartDateTime, LocalDateTime eventEndDateTime, String eventImageUrl,
+            double eventDistance, Organizer organizer) {
+        this.id = id;
+        this.eventName = eventName;
+        this.category = category;
+        this.eventLocation = eventLocation;
+        this.eventStartDateTime = eventStartDateTime;
+        this.eventEndDateTime = eventEndDateTime;
+        this.eventImageUrl = eventImageUrl;
+        this.eventDistance = eventDistance;
+        this.organizer = organizer;
+    }
+
+    public Event(String eventName, EventsCategory category, Location eventLocation, LocalDateTime eventStartDateTime,
+            LocalDateTime eventEndDateTime, String eventImageUrl, double eventDistance, Organizer organizer) {
+        this.eventName = eventName;
+        this.category = category;
+        this.eventLocation = eventLocation;
+        this.eventStartDateTime = eventStartDateTime;
+        this.eventEndDateTime = eventEndDateTime;
+        this.eventImageUrl = eventImageUrl;
+        this.eventDistance = eventDistance;
+        this.organizer = organizer;
+    }
+
     public Long getEventId() {
         return id;
     }

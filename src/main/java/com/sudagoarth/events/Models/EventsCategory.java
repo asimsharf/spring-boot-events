@@ -19,11 +19,11 @@ public class EventsCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-     @Column(nullable = false, unique = true)
-    private String name;  // For example: "Music", "Art", etc.
+    @Column(nullable = false, unique = true)
+    private String name; // For example: "Music", "Art", etc.
 
     @OneToMany(mappedBy = "category")
-    private List<Event> events;  // A category has many events
+    private List<Event> events; // A category has many events
 
     // Constructors
     public EventsCategory() {
@@ -41,7 +41,6 @@ public class EventsCategory {
         this.id = eventsCategory.getCategoryId();
         this.name = eventsCategory.getName();
     }
-
 
     // Getters and Setters
     public Long getCategoryId() {
@@ -67,5 +66,5 @@ public class EventsCategory {
     public void setEvents(List<Event> events) {
         this.events = events;
     }
-    
+
 }

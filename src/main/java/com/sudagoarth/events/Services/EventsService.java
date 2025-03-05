@@ -65,7 +65,6 @@ public class EventsService implements EventsInterface {
             eventLocation = locationRepository.save(eventLocation);
         }
 
-
         // Save Organizer Location
         Location organizerLocation = new Location(eventRequest.getOrganizer().getLocation());
         organizerLocation = locationRepository.save(organizerLocation);
@@ -89,8 +88,6 @@ public class EventsService implements EventsInterface {
         event.setOrganizer(organizer);
 
         LOGGER.info("Event created: {}", event);
-
-  
 
         Event savedEvent = eventRepository.save(event);
         return new EventResponse(savedEvent);

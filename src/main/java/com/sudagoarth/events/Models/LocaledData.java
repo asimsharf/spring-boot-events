@@ -5,7 +5,6 @@ public class LocaledData {
     private String arabic;
     private String english;
 
-    // Constructors
     public LocaledData() {
     }
 

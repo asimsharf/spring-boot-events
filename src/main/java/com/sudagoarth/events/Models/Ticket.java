@@ -2,7 +2,6 @@ package com.sudagoarth.events.Models;
 
 import java.util.Date;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +32,6 @@ public class Ticket {
     private String ticketStatus;
     private String ticketCode;
 
-    // Getters and Setters
     public Long getTicketId() {
         return ticketId;
     }

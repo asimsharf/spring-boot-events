@@ -26,7 +26,6 @@ public class Restaurant {
     private String restaurantImageUrl;
     private double restaurantDistance;
 
-    // Getters and Setters
     public Long getRestaurantId() {
         return restaurantId;
     }

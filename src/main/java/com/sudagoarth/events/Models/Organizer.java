@@ -1,6 +1,5 @@
 package com.sudagoarth.events.Models;
 
-
 import com.sudagoarth.events.DataTransferObjects.Organizer.OrganizerRequest;
 
 import jakarta.persistence.Entity;
@@ -29,13 +28,9 @@ public class Organizer {
     @JoinColumn(name = "organizer_location_id", nullable = false)
     private Location location;
 
-
-
-    // Constructors
-
     public Organizer() {
     }
-    
+
     public Organizer(OrganizerRequest organizerRequest, Location location) {
         this.name = organizerRequest.getName();
         this.email = organizerRequest.getEmail();
@@ -53,8 +48,6 @@ public class Organizer {
         this.logoUrl = logoUrl;
         this.location = location;
     }
-
-
 
     // Getters and Setters
     public Long getId() {
@@ -115,9 +108,9 @@ public class Organizer {
 
     @Override
     public String toString() {
-        return "Organizer [email=" + email + ", id=" + id + ", location=" + location.toString() + ", logoUrl=" + logoUrl + ", name="
+        return "Organizer [email=" + email + ", id=" + id + ", location=" + location.toString() + ", logoUrl=" + logoUrl
+                + ", name="
                 + name + ", phone=" + phone + ", website=" + website + "]";
     }
 
-    
 }
