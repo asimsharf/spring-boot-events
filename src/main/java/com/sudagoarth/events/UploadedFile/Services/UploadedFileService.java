@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public class UploadedFileService implements UploadedFileInterface {
     }
 
     @Override
-    public UploadedFileResponse createUploadedFile(UploadedFileRequest uploadedFileRequest) {
+    public UploadedFileResponse createUploadedFile(UploadedFileRequest uploadedFileRequest) throws NotFoundException {
 
         // Decode the base64 string into bytes using Java's standard Base64
         String base64Data = uploadedFileRequest.getBase64File();
@@ -83,35 +84,49 @@ public class UploadedFileService implements UploadedFileInterface {
         String fileName = uploadedFileRequest.getFileName() + "." + fileExtension;
         String filePath = directoryPath + "/" + fileName;
 
-        // Save the file on disk
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            fos.write(fileData); // Write the file data to the file
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing file to disk: " + e.getMessage(), e);
-        }
-
-        // Get the file size
-        File uploadFile = new File(filePath);
-        long fileSize = uploadFile.length();
-
         // Fetch the RequiredDocument entity using the provided ID
         RequiredDocument requiredDocument = requiredDocumentRepository
                 .findById(uploadedFileRequest.getRequiredDocumentId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new NotFoundException(
                         "Required document not found with id: " + uploadedFileRequest.getRequiredDocumentId()));
 
-        // Create the UploadedFile entity and set its properties
-        UploadedFile fileEntity = new UploadedFile();
-        fileEntity.setFileName(fileName);
-        fileEntity.setFilePath(filePath);
-        fileEntity.setFileSize(fileSize);
-        fileEntity.setFileType(mimeType); // Set the MIME type detected from the file content
-        fileEntity.setFileDownloadUri("/files/" + fileName);
-        fileEntity.setFileExtension(fileExtension);
-        fileEntity.setRequiredDocument(requiredDocument); // Set the actual RequiredDocument entity
+        // Check if the file already exists for the given RequiredDocument
+        UploadedFile existingFile = uploadedFileRepository.findByRequiredDocument(requiredDocument);
 
-        // Save the file metadata in the database
-        UploadedFile uploadedFile = uploadedFileRepository.save(fileEntity);
+        UploadedFile uploadedFile;
+        if (existingFile != null) {
+            // If a file already exists, delete the old file in the directory
+            File oldFile = new File(existingFile.getFilePath());
+            if (oldFile.exists()) {
+                oldFile.delete(); // Delete the old file
+            }
+
+            // Update the existing file
+            existingFile.setFileName(fileName);
+            existingFile.setFilePath(filePath);
+            existingFile.setFileSize((long) fileData.length);
+            existingFile.setFileExtension(fileExtension);
+
+            // Save the updated file details
+            uploadedFile = uploadedFileRepository.save(existingFile); // Update the existing file in the database
+        } else {
+            // If no file exists, create a new file
+            UploadedFile fileEntity = new UploadedFile();
+            fileEntity.setFileName(fileName);
+            fileEntity.setFilePath(filePath);
+            fileEntity.setFileSize((long) fileData.length);
+            fileEntity.setFileExtension(fileExtension);
+            fileEntity.setRequiredDocument(requiredDocument); // Set the actual RequiredDocument entity
+
+            uploadedFile = uploadedFileRepository.save(fileEntity); // Save as a new file
+        }
+
+        // Save the new file on disk (after removing the old one, if it existed)
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            fos.write(fileData); // Write the new file data to the file
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing file to disk: " + e.getMessage(), e);
+        }
 
         // Return the response with the file details
         return new UploadedFileResponse(uploadedFile);
@@ -156,13 +171,16 @@ public class UploadedFileService implements UploadedFileInterface {
     @Override
     public List<RequiredDocumentResponse> getAllRequiredDocuments(Long entityTypeId) throws NotFoundException {
         LOGGER.info("Fetching all required documents for entityTypeId: {}", entityTypeId);
+
+        // Fetch required documents for the given entityTypeId
         List<RequiredDocument> requiredDocuments = requiredDocumentRepository.findByEntityType(entityTypeId);
 
-        if (requiredDocuments.isEmpty()) {
-            throw new NotFoundException("No required documents found for entityTypeId: " + entityTypeId);
-        }
+        // Filter out the documents that have already been uploaded
+        List<RequiredDocument> documentsToReturn = requiredDocuments.stream()
+                .filter(requiredDocument -> !uploadedFileRepository.existsByRequiredDocument(requiredDocument))
+                .collect(Collectors.toList());
 
-        return RequiredDocumentResponse.fromEntities(requiredDocuments);
+        return RequiredDocumentResponse.fromEntities(documentsToReturn);
     }
 
     @Override

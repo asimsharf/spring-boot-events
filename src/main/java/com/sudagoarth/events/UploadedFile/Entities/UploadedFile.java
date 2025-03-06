@@ -13,15 +13,10 @@ public class UploadedFile {
     private String fileName;
 
     @Column(nullable = false)
-    private String fileType;
-
-    @Column(nullable = false)
     private String filePath;
 
     @Column(nullable = false)
     private Long fileSize;
-
-    private String fileDownloadUri;
 
     private String fileExtension;
 
@@ -45,14 +40,6 @@ public class UploadedFile {
         this.fileName = fileName;
     }
 
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-
     public String getFilePath() {
         return filePath;
     }
@@ -67,14 +54,6 @@ public class UploadedFile {
 
     public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
-    }
-
-    public String getFileDownloadUri() {
-        return fileDownloadUri;
-    }
-
-    public void setFileDownloadUri(String fileDownloadUri) {
-        this.fileDownloadUri = fileDownloadUri;
     }
 
     public String getFileExtension() {
