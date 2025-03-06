@@ -1,6 +1,9 @@
 package com.sudagoarth.events.UploadedFile.DataTransferObjects;
 
+import java.util.List;
+
 import com.sudagoarth.events.Event.Entities.EntityType;
+import com.sudagoarth.events.UploadedFile.Entities.RequiredDocument;
 
 public class RequiredDocumentResponse {
     private Long id;
@@ -24,6 +27,15 @@ public class RequiredDocumentResponse {
         this.isRequired = isRequired;
     }
 
+
+
+    public static List<RequiredDocumentResponse> fromEntities(List<RequiredDocument> requiredDocuments) {
+        return requiredDocuments.stream().map(RequiredDocumentResponse::fromEntity).toList();
+    }
+
+    public static RequiredDocumentResponse fromEntity(RequiredDocument requiredDocument) {
+        return new RequiredDocumentResponse(requiredDocument.getId(), requiredDocument.getDocumentName(), requiredDocument.getEntityType(), requiredDocument.isRequired());
+    }
     public Long getId() {
         return id;
     }
@@ -55,4 +67,5 @@ public class RequiredDocumentResponse {
     public void setRequired(boolean required) {
         isRequired = required;
     }
+
 }

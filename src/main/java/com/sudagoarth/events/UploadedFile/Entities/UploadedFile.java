@@ -25,10 +25,9 @@ public class UploadedFile {
 
     private String fileExtension;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "required_document_id")
+    @ManyToOne
+    @JoinColumn(name = "required_document_id", nullable = false)
     private RequiredDocument requiredDocument;
-    private boolean isRequired;
 
     public Long getId() {
         return id;
@@ -94,11 +93,4 @@ public class UploadedFile {
         this.requiredDocument = requiredDocument;
     }
 
-    public boolean isRequired() {
-        return isRequired;
-    }
-
-    public void setRequired(boolean isRequired) {
-        this.isRequired = isRequired;
-    }
 }

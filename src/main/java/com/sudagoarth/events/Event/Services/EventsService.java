@@ -16,7 +16,6 @@ import com.sudagoarth.events.Event.Entities.EventsCategory;
 import com.sudagoarth.events.Event.Interfaces.EventsInterface;
 import com.sudagoarth.events.Event.Repositories.EventRepository;
 import com.sudagoarth.events.Event.Repositories.EventsCategoryRepository;
-import com.sudagoarth.events.Location.DataTransferObjects.LocationRequest;
 import com.sudagoarth.events.Location.Entities.Location;
 import com.sudagoarth.events.Location.Repositories.LocationRepository;
 import com.sudagoarth.events.Organizer.Entities.Organizer;

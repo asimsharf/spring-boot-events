@@ -1,4 +1,4 @@
-package com.sudagoarth.events.User.Repositories;
+package com.sudagoarth.events.UploadedFile.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

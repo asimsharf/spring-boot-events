@@ -14,7 +14,7 @@ public class RequiredDocument {
     @Column(nullable = false)
     private String documentName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entity_type_id")
     private EntityType entityType;
 

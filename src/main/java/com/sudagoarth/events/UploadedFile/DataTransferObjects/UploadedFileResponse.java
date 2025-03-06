@@ -1,24 +1,32 @@
 package com.sudagoarth.events.UploadedFile.DataTransferObjects;
 
-import com.sudagoarth.events.UploadedFile.Entities.RequiredDocument;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+import com.sudagoarth.events.UploadedFile.Entities.UploadedFile;
 
 public class UploadedFileResponse {
 
     private Long id;
+
     private String fileName;
+
     private String fileType;
+
     private String filePath;
+
     private Long fileSize;
+
     private String fileDownloadUri;
+
     private String fileExtension;
-    private RequiredDocument requiredDocument;
-    private boolean isRequired;
 
     public UploadedFileResponse() {
     }
 
     public UploadedFileResponse(Long id, String fileName, String fileType, String filePath, Long fileSize,
-            String fileDownloadUri, String fileExtension, RequiredDocument requiredDocument, boolean isRequired) {
+            String fileDownloadUri, String fileExtension) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
@@ -26,20 +34,27 @@ public class UploadedFileResponse {
         this.fileSize = fileSize;
         this.fileDownloadUri = fileDownloadUri;
         this.fileExtension = fileExtension;
-        this.requiredDocument = requiredDocument;
-        this.isRequired = isRequired;
     }
 
     public UploadedFileResponse(String fileName, String fileType, String filePath, Long fileSize,
-            String fileDownloadUri, String fileExtension, RequiredDocument requiredDocument, boolean isRequired) {
+            String fileDownloadUri, String fileExtension) {
         this.fileName = fileName;
         this.fileType = fileType;
         this.filePath = filePath;
         this.fileSize = fileSize;
         this.fileDownloadUri = fileDownloadUri;
         this.fileExtension = fileExtension;
-        this.requiredDocument = requiredDocument;
-        this.isRequired = isRequired;
+    }
+
+    public UploadedFileResponse(UploadedFile uploadedFile) {
+        this.id = uploadedFile.getId();
+        this.fileName = uploadedFile.getFileName();
+        this.fileType = uploadedFile.getFileType();
+        this.filePath = uploadedFile.getFilePath();
+        this.fileSize = uploadedFile.getFileSize();
+        this.fileDownloadUri = uploadedFile.getFileDownloadUri();
+        this.fileExtension = uploadedFile.getFileExtension();
+
     }
 
     public Long getId() {
@@ -98,20 +113,10 @@ public class UploadedFileResponse {
         this.fileExtension = fileExtension;
     }
 
-    public RequiredDocument getRequiredDocument() {
-        return requiredDocument;
+    public static List<UploadedFileResponse> fromUploadedFiles(List<UploadedFile> uploadedFiles) {
+        return uploadedFiles.stream().map(UploadedFileResponse::new).collect(Collectors.toList());
     }
+    
 
-    public void setRequiredDocument(RequiredDocument requiredDocument) {
-        this.requiredDocument = requiredDocument;
-    }
-
-    public boolean isRequired() {
-        return isRequired;
-    }
-
-    public void setRequired(boolean required) {
-        isRequired = required;
-    }
 
 }
