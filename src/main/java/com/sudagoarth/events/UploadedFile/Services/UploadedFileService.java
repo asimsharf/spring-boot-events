@@ -44,8 +44,11 @@ public class UploadedFileService implements UploadedFileInterface {
     }
 
     @Override
-    public UploadedFileResponse getUploadedFileById(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getUploadedFileById'");
+    public UploadedFileResponse getUploadedFileById(Long id) throws NotFoundException {
+        UploadedFile uploadedFile = uploadedFileRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Uploaded file not found with id: " + id));
+
+        return new UploadedFileResponse(uploadedFile);
     }
 
     @Override
@@ -159,13 +162,99 @@ public class UploadedFileService implements UploadedFileInterface {
     }
 
     @Override
-    public UploadedFileResponse updateUploadedFile(Long id, UploadedFileRequest uploadedFileRequest) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateUploadedFile'");
+    public UploadedFileResponse updateUploadedFile(Long id, UploadedFileRequest uploadedFileRequest)
+            throws NotFoundException {
+
+        // Fetch the existing uploaded file entity
+        UploadedFile uploadedFile = uploadedFileRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Uploaded file not found with id: " + id));
+
+        // Decode the base64 string into bytes using Java's standard Base64
+        String base64Data = uploadedFileRequest.getBase64File();
+
+        // Remove the prefix if it exists (e.g., "data:image/png;base64,")
+        if (base64Data.startsWith("data:")) {
+            base64Data = base64Data.substring(base64Data.indexOf(",") + 1); // Remove the "data:[<mediatype>];base64,"
+                                                                            // part
+        }
+
+        // Now decode the base64 string
+        byte[] fileData = Base64.getDecoder().decode(base64Data);
+
+        // Detect file type using Apache Tika (MIME type detection)
+        Tika tika = new Tika();
+        String mimeType = tika.detect(fileData); // This will give us the MIME type
+
+        // Map MIME type to file extension
+        String fileExtension = getExtensionFromMimeType(mimeType);
+        if (fileExtension == null) {
+            throw new RuntimeException("Unsupported file type: " + mimeType);
+        }
+
+        // Define the directory and path where the file will be stored
+        String directoryPath = "uploads/" + uploadedFileRequest.getRequiredDocumentId();
+        File directory = new File(directoryPath);
+        if (!directory.exists()) {
+            directory.mkdirs(); // Create directories if they do not exist
+        }
+
+        // Generate a file name with the extension
+        String fileName = uploadedFileRequest.getFileName() + "." + fileExtension;
+        String filePath = directoryPath + "/" + fileName;
+
+        // Fetch the RequiredDocument entity using the provided ID
+        RequiredDocument requiredDocument = requiredDocumentRepository
+                .findById(uploadedFileRequest.getRequiredDocumentId())
+                .orElseThrow(() -> new NotFoundException(
+                        "Required document not found with id: " + uploadedFileRequest.getRequiredDocumentId()));
+
+        // Check if the file already exists for the given RequiredDocument
+        UploadedFile existingFile = uploadedFileRepository.findByRequiredDocument(requiredDocument);
+
+        if (existingFile != null) {
+            // If a file already exists, delete the old file in the directory
+            File oldFile = new File(existingFile.getFilePath());
+            if (oldFile.exists()) {
+                oldFile.delete(); // Delete the old
+            }
+        }
+
+        // Update the existing file
+        uploadedFile.setFileName(fileName);
+        uploadedFile.setFilePath(filePath);
+        uploadedFile.setFileSize((long) fileData.length);
+        uploadedFile.setFileExtension(fileExtension);
+        uploadedFile.setRequiredDocument(requiredDocument); // Set the actual RequiredDocument entity
+
+        // Save the updated file details
+        UploadedFile updatedFile = uploadedFileRepository.save(uploadedFile); // Update the existing file in the
+                                                                              // database
+
+        // Save the new file on disk (after removing the old one, if it existed)
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            fos.write(fileData); // Write the new file data to the file
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing file to disk: " + e.getMessage(), e);
+        }
+
+        // Return the response with the file details
+        return new UploadedFileResponse(updatedFile);
+
     }
 
     @Override
-    public void deleteUploadedFile(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteUploadedFile'");
+    public void deleteUploadedFile(Long id) throws NotFoundException {
+        UploadedFile uploadedFile = uploadedFileRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Uploaded file not found with id: " + id));
+
+        // Delete the file from the disk
+        File file = new File(uploadedFile.getFilePath());
+        if (file.exists()) {
+            file.delete(); // Delete the file
+        }
+
+        // Delete the file from the database
+        uploadedFileRepository.delete(uploadedFile);
     }
 
     @Override
@@ -184,23 +273,46 @@ public class UploadedFileService implements UploadedFileInterface {
     }
 
     @Override
-    public RequiredDocumentResponse getRequiredDocumentById(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getRequiredDocumentById'");
+    public RequiredDocumentResponse getRequiredDocumentById(Long id) throws NotFoundException {
+        RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Required document not found with id: " + id));
+
+        return new RequiredDocumentResponse(requiredDocument);
     }
 
     @Override
     public RequiredDocumentResponse createRequiredDocument(RequiredDocumentRequest requiredDocumentRequest) {
-        throw new UnsupportedOperationException("Unimplemented method 'createRequiredDocument'");
+        RequiredDocument requiredDocument = new RequiredDocument();
+        requiredDocument.setDocumentName(requiredDocumentRequest.getDocumentName());
+        requiredDocument.setEntityType(requiredDocumentRequest.getEntityType());
+        requiredDocument.setRequired(requiredDocumentRequest.isRequired());
+
+        RequiredDocument savedDocument = requiredDocumentRepository.save(requiredDocument);
+
+        return new RequiredDocumentResponse(savedDocument);
     }
 
     @Override
-    public RequiredDocumentResponse updateRequiredDocument(Long id, RequiredDocumentRequest requiredDocumentRequest) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateRequiredDocument'");
+    public RequiredDocumentResponse updateRequiredDocument(Long id, RequiredDocumentRequest requiredDocumentRequest)
+            throws NotFoundException {
+        RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Required document not found with id: " + id));
+
+        requiredDocument.setDocumentName(requiredDocumentRequest.getDocumentName());
+        requiredDocument.setEntityType(requiredDocumentRequest.getEntityType());
+        requiredDocument.setRequired(requiredDocumentRequest.isRequired());
+
+        RequiredDocument updatedDocument = requiredDocumentRepository.save(requiredDocument);
+
+        return new RequiredDocumentResponse(updatedDocument);
     }
 
     @Override
-    public void deleteRequiredDocument(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteRequiredDocument'");
+    public void deleteRequiredDocument(Long id) throws NotFoundException {
+        RequiredDocument requiredDocument = requiredDocumentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Required document not found with id: " + id));
+
+        requiredDocumentRepository.delete(requiredDocument);
     }
 
 }

@@ -29,6 +29,13 @@ public class RequiredDocumentResponse {
 
 
 
+    public RequiredDocumentResponse(RequiredDocument requiredDocument) {
+        this.id = requiredDocument.getId();
+        this.documentName = requiredDocument.getDocumentName();
+        this.entityType = requiredDocument.getEntityType();
+        this.isRequired = requiredDocument.isRequired();
+    }
+
     public static List<RequiredDocumentResponse> fromEntities(List<RequiredDocument> requiredDocuments) {
         return requiredDocuments.stream().map(RequiredDocumentResponse::fromEntity).toList();
     }
